@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>QX-200 v9.0 | Quant Engine</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+:root{--bg:#07090e;--c:#0c1018;--s:#101520;--i:#151b27;--b:#1c2336;--bh:#28334d;
+--G:#00d4a0;--Gd:rgba(0,212,160,.1);--Gb:rgba(0,212,160,.22);
+--B:#4d9fff;--Bd:rgba(77,159,255,.1);--Bb:rgba(77,159,255,.22);
+--A:#ffc857;--Ad:rgba(255,200,87,.1);--Ab:rgba(255,200,87,.22);
+--R:#ff4d6d;--Rd:rgba(255,77,109,.08);--Rb:rgba(255,77,109,.22);
+--U:#a78bfa;--Ud:rgba(167,139,250,.1);--Ub:rgba(167,139,250,.22);
+--t1:#dde4f0;--t2:#7a8699;--t3:#3d4a5e;--r:10px;--rs:6px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;overflow-x:hidden}
+nav{background:var(--c);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:99;display:flex;flex-direction:column}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid var(--b)}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.qx-logo{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--G),var(--B));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 8px rgba(0,212,160,.3)}
+.qx-logo svg{width:14px;height:14px}
+.pulse{width:6px;height:6px;background:var(--G);border-radius:50%;box-shadow:0 0 7px var(--G);animation:pp 2s infinite;flex-shrink:0}
+@keyframes pp{0%,100%{opacity:1}50%{opacity:.25}}
+.bn{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;white-space:nowrap}
+.bv{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--A);background:var(--Ad);padding:2px 7px;border-radius:4px;border:1px solid var(--Ab);white-space:nowrap;flex-shrink:0}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none;width:100%}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:11px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.tab.on{color:var(--B);border-bottom-color:var(--B)}
+.tab.on.ta{color:var(--R);border-bottom-color:var(--R)}
+.tab.on.tw{color:var(--A);border-bottom-color:var(--A)}
+.tab.on.tl{color:var(--G);border-bottom-color:var(--G)}
+.pg{display:none;padding:12px;padding-bottom:28px}
+.pg.on{display:block}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.hc{background:var(--c);border:1px solid var(--b);border-radius:var(--r);padding:12px 13px}
+.hl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.09em;font-weight:600;margin-bottom:3px}
+.hv{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;line-height:1.2}
+.hs{font-size:10px;color:var(--t3);margin-top:1px}
+.cG{color:var(--G)}.cB{color:var(--B)}.cA{color:var(--A)}.cR{color:var(--R)}.cU{color:var(--U)}
+.card{background:var(--c);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.ch{padding:10px 13px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--b)}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dG{background:var(--G);box-shadow:0 0 5px var(--G)}.dB{background:var(--B);box-shadow:0 0 5px var(--B)}
+.dA{background:var(--A);box-shadow:0 0 5px var(--A)}.dR{background:var(--R);box-shadow:0 0 5px var(--R)}
+.ct{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.asub-hdr{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 3px 6px;margin-top:6px;border-top:1px solid var(--b)}
+.asub-hdr:first-child{margin-top:0;border-top:none;padding-top:2px}
+.bx{display:inline-block;padding:2px 7px;border-radius:4px;font-size:8px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.xG{background:var(--Gd);color:var(--G);border:1px solid var(--Gb)}.xB{background:var(--Bd);color:var(--B);border:1px solid var(--Bb)}
+.xA{background:var(--Ad);color:var(--A);border:1px solid var(--Ab)}.xR{background:var(--Rd);color:var(--R);border:1px solid var(--Rb)}
+.xU{background:var(--Ud);color:var(--U);border:1px solid var(--Ub)}
+/* TAP-TO-EXPAND ROWS */
+.xrow{background:var(--c);border:1px solid var(--b);border-radius:var(--r);margin-bottom:8px;overflow:hidden;cursor:pointer}
+.xrow.bG{border-left:3px solid var(--G)}.xrow.bB{border-left:3px solid var(--B)}.xrow.bA{border-left:3px solid var(--A)}.xrow.bR{border-left:3px solid var(--R)}
+.xhead{padding:11px 13px;display:flex;justify-content:space-between;align-items:center}
+.xleft{display:flex;flex-direction:column;gap:1px}
+.xsym{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.xsub{font-size:10px;color:var(--t3)}
+.xright{display:flex;align-items:center;gap:10px}
+.slogo{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;flex-shrink:0}
+.xhead2{padding:11px 13px;display:flex;align-items:center;gap:10px}
+.xmain{flex:1;min-width:0}
+.xtop{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.xsym2{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.xmeta{font-size:10px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xnums{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.xpl{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.xplabs{font-family:'JetBrains Mono',monospace;font-size:9px}
+.xmom{display:flex;align-items:center;gap:4px;font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700}
+.xchev2{font-size:10px;color:var(--t3);transition:transform .2s;flex-shrink:0}
+.xrow.open .xchev2{transform:rotate(90deg)}
+.gain-btns{display:flex;gap:6px;margin-bottom:12px}
+.gain-btn{flex:1;padding:10px 6px;background:var(--s);border:1px solid var(--b);border-radius:var(--rs);cursor:pointer;text-align:center}
+.gain-btn.on{background:var(--Gd);border-color:var(--Gb)}
+.gain-btn-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.gain-btn.on .gain-btn-l{color:var(--G)}
+.gain-btn-v{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;margin-top:3px}
+.gain-btn-p{font-family:'JetBrains Mono',monospace;font-size:10px;margin-top:1px}
+.gain-panel{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:12px;margin-bottom:12px}
+.gain-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b);font-size:11px}
+.gain-row:last-child{border-bottom:none}
+.gain-tot{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700}
+.al{border-radius:var(--r);padding:11px 13px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;border:1px solid}
+.alR{background:var(--Rd);border-color:var(--Rb)}
+.alG{background:var(--Gd);border-color:var(--Gb)}
+.alA{background:var(--Ad);border-color:var(--Ab)}
+.ai{font-size:16px;flex-shrink:0;line-height:1}
+.at{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;margin-bottom:3px;color:var(--t1)}
+.ax{font-size:11px;color:var(--t2);line-height:1.5}
+.xret{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.xchev{font-size:10px;color:var(--t3);transition:transform .2s}
+.xrow.open .xchev{transform:rotate(90deg)}
+.xbody{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.xrow.open .xbody{max-height:3000px}
+.xbody-in{padding:0 13px 13px;border-top:1px solid var(--b)}
+/* MOMENTUM MINI (in row header) */
+.mom-mini{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;line-height:1}
+.mom-mini-stage{font-size:7px;font-weight:700;letter-spacing:.04em;text-align:right;margin-top:1px}
+.stage-conf{color:var(--G)}.stage-build{color:var(--A)}.stage-fade{color:var(--R)}.stage-early{color:var(--B)}
+/* MOMENTUM BLOCK (expanded detail) — visually dominant */
+.mom-block{background:linear-gradient(135deg,var(--Ud),transparent);border:1px solid var(--Ub);border-radius:var(--rs);padding:12px;margin-top:10px}
+.mom-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.mom-big{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;line-height:1}
+.mom-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
+.mom-stage{font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:.05em}
+.mom-stage.stage-conf{background:var(--Gd);border:1px solid var(--Gb)}
+.mom-stage.stage-build{background:var(--Ad);border:1px solid var(--Ab)}
+.mom-stage.stage-fade{background:var(--Rd);border:1px solid var(--Rb)}
+.mom-stage.stage-early{background:var(--Bd);border:1px solid var(--Bb)}
+.mom-note{font-size:11px;color:var(--t2);line-height:1.5;margin-bottom:8px}
+.mom-sub{display:flex;gap:8px;flex-wrap:wrap;font-size:9px;color:var(--t3);font-family:'JetBrains Mono',monospace}
+.mom-sub span{background:var(--s);padding:3px 7px;border-radius:3px}
+/* QX BREAKDOWN — momentum row emphasised */
+.qxbd{background:var(--s);border-radius:var(--rs);padding:10px;margin-top:8px}
+.qxbd-t{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:7px;display:flex;justify-content:space-between}
+.qxrow{display:flex;align-items:center;gap:7px;margin-bottom:5px}.qxrow:last-child{margin-bottom:0}
+.qxrow-dom{margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--Ub)}
+.qxrl{font-size:9px;color:var(--t2);width:105px;flex-shrink:0}
+.qxrl-dom{color:var(--U);font-weight:700;font-size:10px}
+.qxrb{flex:1;height:4px;background:var(--b);border-radius:2px;overflow:hidden}
+.qxrb-dom{height:7px}
+.qxrf{height:100%;border-radius:2px}.qxrv{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;min-width:28px;text-align:right}
+/* ALLOCATION VIEW */
+.alloc-box{background:var(--s);border-radius:var(--rs);padding:10px;margin-top:8px}
+.alloc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b);font-size:11px}
+.alloc-row:last-child{border-bottom:none}
+.alloc-k{color:var(--t2)}.alloc-v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px}
+.alloc-bar{position:relative;height:6px;background:var(--b);border-radius:3px;overflow:visible;margin-bottom:2px}
+.alloc-fill{height:100%;border-radius:3px}
+.alloc-cap{position:absolute;top:-2px;width:2px;height:10px;background:var(--t2)}
+/* CATALYST / SURPRISE */
+.catbox{background:var(--s);border-radius:var(--rs);padding:10px;margin-top:8px}
+.cat-t{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.crow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b);font-size:11px}.crow:last-child{border-bottom:none}
+.ck{color:var(--t2)}.cv{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10px}
+.stars{color:var(--A);font-size:11px;letter-spacing:1px}
+.surbox{background:var(--Ud);border:1px solid var(--Ub);border-radius:var(--rs);padding:10px;margin-top:8px}
+.sur-t{font-size:9px;color:var(--U);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:7px}
+.sur-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.sur-item{background:var(--s);border-radius:var(--rs);padding:7px;text-align:center}
+.sur-lbl{font-size:8px;color:var(--t3);text-transform:uppercase;margin-bottom:3px}
+.sur-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700}
+.sur-flag{font-size:10px;color:var(--t2);line-height:1.5;background:var(--s);border-radius:var(--rs);padding:7px 9px}
+/* DGRID / NOTES */
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
+.dkv{display:flex;flex-direction:column;gap:1px}
+.dk{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
+.dv{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600}
+.dnote{font-size:11px;color:var(--t2);line-height:1.55;border-top:1px solid var(--b);padding-top:8px;margin-top:8px}
+.frow{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.ft{font-size:9px;padding:2px 7px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.fb{background:var(--Gd);color:var(--G);border:1px solid var(--Gb)}
+.replace-flag{background:var(--Rd);border:1px solid var(--Rb);color:var(--R);font-size:10px;font-weight:700;padding:7px 9px;border-radius:var(--rs);margin-top:8px}
+.al{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:var(--r);border:1px solid;margin-bottom:12px}
+.alR{background:var(--Rd);border-color:var(--Rb)}
+.ai{font-size:16px;flex-shrink:0;line-height:1}
+.at{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--R);margin-bottom:3px}
+.ax{font-size:11px;color:var(--t2);line-height:1.5}
+/* REPLACEMENT SIGNAL CARDS */
+.replace-card{background:var(--s);border:1px solid var(--Rb);border-radius:var(--rs);padding:10px;margin-bottom:8px}
+.replace-card:last-child{margin-bottom:0}
+.replace-top{display:flex;align-items:center;gap:10px}
+.replace-sell,.replace-buy{flex:1;text-align:center}
+.rs-lbl,.rb-lbl{font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.rs-sym,.rb-sym{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.rs-mom,.rb-mom{font-size:9px;margin-top:2px}
+.replace-arrow{font-size:16px;color:var(--t3)}
+.replace-detail{font-size:10px;color:var(--t2);margin-top:8px;padding-top:8px;border-top:1px solid var(--b);line-height:1.5}
+/* WATCHLIST FILTERS */
+.wfs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.wf{padding:5px 11px;background:var(--s);border:1px solid var(--b);border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--t3);cursor:pointer;white-space:nowrap}
+.wf.on{background:var(--Ad);border-color:var(--Ab);color:var(--A)}
+/* LEADERSHIP */
+.lmap{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.lsec{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:10px 12px}
+.lsec-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.lsec-nm{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700}
+.lreg{font-size:9px;padding:2px 7px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-weight:700}
+.lr-regime{background:var(--Gd);color:var(--G);border:1px solid var(--Gb)}
+.lr-rot{background:var(--Bd);color:var(--B);border:1px solid var(--Bb)}
+.lr-sec{background:var(--Ad);color:var(--A);border:1px solid var(--Ab)}
+.lstks{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+/* LEADERSHIP v2 — StockEdge momentum scores */
+.lmap-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;padding:8px 10px;background:var(--s);border-radius:var(--rs);font-size:10px;color:var(--t2)}
+.lleg{display:flex;align-items:center;gap:5px}
+.ldot{width:8px;height:8px;border-radius:2px;display:inline-block}
+.lleg-date{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3)}
+.lmap-sub{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.lsec2{background:var(--s);border:1px solid var(--b);border-radius:var(--rs);padding:9px 11px;margin-bottom:6px}
+.lsec2-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.lsec2-nm{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--t1)}
+.lsec2-meta{font-size:9px;color:var(--t3)}
+.lsec2-scores{display:flex;gap:6px}
+.lscore{flex:1;border-radius:4px;padding:5px 0;text-align:center;color:#0a0e14}
+.lscore-lbl{font-size:8px;font-weight:700;opacity:.75}
+.lscore-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;line-height:1.2}
+.lmap-note{font-size:10px;color:var(--A);background:var(--Ad);border:1px solid var(--Ab);border-radius:var(--rs);padding:8px 10px;margin-top:10px;line-height:1.5}
+
+.lstk{font-size:9px;background:var(--b);color:var(--t2);padding:2px 7px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.lbar{height:3px;background:var(--b);border-radius:2px;overflow:hidden}
+.lbarf{height:100%;border-radius:2px}
+.wflow{display:flex;flex-direction:column}
+.wfstep{display:flex;position:relative}
+.wfstep:not(:last-child)::after{content:'';position:absolute;left:15px;top:32px;width:2px;height:calc(100% - 8px);background:var(--b)}
+.wfnum{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;margin-right:11px;margin-bottom:13px;background:var(--Bd);border:2px solid var(--B);color:var(--B)}
+.wfcontent{flex:1;padding-bottom:13px}
+.wftitle{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--B);margin-bottom:2px}
+.wftext{font-size:11px;color:var(--t2);line-height:1.5}
+.rule{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--b);font-size:11px}
+.rule:last-child{border-bottom:none}
+.rn{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--A);width:auto;flex-shrink:0;white-space:nowrap}
+.rt{color:var(--t2);line-height:1.5}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-top">
+    <div class="brand">
+      <div class="qx-logo"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18L9 10L13 15L20 5" stroke="#08110d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="5" r="2" fill="#08110d"/></svg></div>
+      <div class="pulse"></div>
+      <span class="bn">QX-200 v9.0</span>
+    </div>
+    <span class="bv" id="regimeBadge">Regime: Checking...</span>
+  </div>
+  <div class="tabs">
+    <div class="tab on" onclick="sp('ov',this)">📊 Overview</div>
+    <div class="tab ta" onclick="sp('ac',this)">⚡ Action</div>
+    <div class="tab tw" onclick="sp('wl',this)">🔭 Watchlist</div>
+    <div class="tab tl" onclick="sp('lm',this)">🗺 Leadership</div>
+  </div>
+</nav>
+
+<div class="pg on" id="pg-ov">
+  <div class="hero" id="heroBox"></div>
+  <div id="sectorAlert"></div>
+  <div class="gain-btns" id="gainButtons"></div>
+  <div class="gain-panel" id="gainPanel"></div>
+  <div class="card">
+    <div class="ch"><div class="dot dB"></div><div class="ct" style="color:var(--B)">Holdings · Quant-Weighted · Tap to expand</div></div>
+    <div id="ovList" style="padding:10px"></div>
+  </div>
+</div>
+
+<div class="pg" id="pg-ac">
+  <div id="acList"></div>
+</div>
+
+<div class="pg" id="pg-wl">
+  <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6">Nifty 750 · Quant-Driven Alpha Selection</div>
+  <div class="wfs">
+    <div class="wf on" onclick="fw('all',this)">All</div>
+    <div class="wf" onclick="fw('hi52',this)">📈 52W High</div>
+    <div class="wf" onclick="fw('confirmed',this)">🟢 Confirmed</div>
+    <div class="wf" onclick="fw('repl',this)">🔁 Replacement</div>
+    <div class="wf" onclick="fw('surprise',this)">⚡ Surprise</div>
+  </div>
+  <div id="wlList"></div>
+</div>
+
+<div class="pg" id="pg-lm">
+  <div class="card" style="margin-bottom:12px"><div class="ch"><div class="dot dA"></div><div class="ct" style="color:var(--A)">Sector Leadership Map</div></div><div style="padding:10px 13px"><div class="lmap" id="lmap"></div></div></div>
+  <div class="card" style="margin-bottom:12px"><div class="ch"><div class="dot dB"></div><div class="ct" style="color:var(--B)">QX-200 Workflow</div></div><div style="padding:12px 13px"><div class="wflow" id="wflow"></div></div></div>
+  <div class="card" style="margin-bottom:12px"><div class="ch"><div class="dot dR"></div><div class="ct" style="color:var(--R)">10 Hard Rules</div></div><div style="padding:10px 13px" id="rules"></div></div>
+  <div class="card"><div class="ch"><div class="dot dA"></div><div class="ct" style="color:var(--A)">Mistake Log</div></div><div style="padding:10px 13px" id="mistakes"></div></div>
+</div>
+
+<script>
+const API_BASE = "http://localhost:8000";
+let PF = [];
+let WL = [];
+let currentRegime = "NEUTRAL";
+
+async function fetchMarketData() {
+  try {
+    // 1. Get Market Regime
+    const regRes = await fetch(`${API_BASE}/api/market`);
+    const regData = await regRes.json();
+    currentRegime = regData.regime;
+    document.getElementById('regimeBadge').innerText = `Regime: ${currentRegime}`;
+    document.getElementById('regimeBadge').style.color = currentRegime === 'BULLISH' ? 'var(--G)' : 'var(--R)';
+
+    // 2. Get Quant Portfolio
+    const pfRes = await fetch(`${API_BASE}/api/portfolio`);
+    PF = await pfRes.json();
+    WL = PF.map(p => ({...p, sec: p.cluster, tags: []}));
+
+    renderAll();
+  } catch (e) {
+    console.error("Failed to fetch quant data:", e);
+  }
+}
+
+function renderAll() {
+  renderHero();
+  renderPF();
+  renderAction();
+  renderWL();
+}
+
+setInterval(fetchMarketData, 60000);
+window.onload = fetchMarketData;
+
+const SECTOR_LIMIT=25;
+const QXM=[
+  {k:'mom', l:'Momentum', w:20},
+  {k:'eqlt',l:'Earnings Quality', w:14},
+  {k:'eacc',l:'Earnings Accel.', w:14},
+  {k:'rstr',l:'Relative Strength', w:10},
+  {k:'secl',l:'Sector Leadership', w:8},
+  {k:'catq',l:'Catalyst Quality', w:8},
+  {k:'catp',l:'Catalyst Persist.', w:8},
+  {k:'eprd',l:'Predictability', w:8},
+  {k:'vola',l:'Volatility', w:6},
+  {k:'val', l:'Valuation', w:4},
+];
+
+function getGrade(t){return t>=80?'A+':t>=68?'A':t>=55?'B':t>=42?'C':'D'}
+function getGM(g){return{'A+':{cls:'gAp',color:'var(--G)'},'A':{cls:'gA',color:'var(--B)'},'B':{cls:'gB',color:'var(--A)'},'C':{cls:'gC',color:'var(--R)'},'D':{cls:'gD',color:'var(--R)'}}[g]||{cls:'gB',color:'var(--t2)'}}
+const st=n=>'★'.repeat(Math.min(5,n))+'☆'.repeat(Math.max(0,5-n));
+const SIG_META={'ACCUM':{cls:'xG',label:'ACCUM'},'ADD-T':{cls:'xG',label:'ADD·TRIGGER'},'HOLD':{cls:'xB',label:'HOLD'},'LATENT':{cls:'xU',label:'LATENT'},'REDUCE':{cls:'xA',label:'REDUCE'},'TRIM':{cls:'xR',label:'TRIM'}};
+const CAPITAL_TARGET=1000000;
+const CASH=0;
+
+function qxT(qs){return Object.values(qs).reduce((a,b)=>a+b,0)}
+function computeTargetWeights(){
+  const scores = PF.map(p=>({sym:p.sym,score:qxT(p.qs)}));
+  const totalScore = scores.reduce((a,s)=>a+s.score,0);
+  const targets={};
+  scores.forEach(s=>{
+    let t = (s.score/totalScore)*100;
+    if(t>15) t=15;
+    targets[s.sym]=t;
+  });
+  const cappedSyms = Object.keys(targets).filter(s=>targets[s]===15);
+  const cappedTotal = cappedSyms.length*15;
+  const uncapped = scores.filter(s=>!cappedSyms.includes(s.sym));
+  const uncappedScoreSum = uncapped.reduce((a,s)=>a+s.score,0);
+  const remaining = 100-cappedTotal;
+  uncapped.forEach(s=>{
+    targets[s.sym] = uncappedScoreSum>0 ? (s.score/uncappedScoreSum)*remaining : 0;
+  });
+  return targets;
+}
+function qxC(t){return t>=80?'var(--G)':t>=68?'var(--B)':t>=55?'var(--A)':'var(--R)'}
+function momC(s){return s>=70?'var(--G)':s>=55?'var(--B)':s>=40?'var(--A)':'var(--R)'}
+function momLabel(stage){
+  return {confirmed:{cls:'stage-conf',txt:'CONFIRMED'},building:{cls:'stage-build',txt:'BUILDING'},
+          fading:{cls:'stage-fade',txt:'FADING'},early:{cls:'stage-early',txt:'EARLY'}}[stage]
+          ||{cls:'stage-build',txt:stage.toUpperCase()};
+}
+
+function sp(id,t){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.getElementById('pg-'+id).classList.add('on');t.classList.add('on')}
+function toggle(id){const r=document.getElementById(id);r&&r.classList.toggle('open')}
+
+function qxBarHTML(qs){
+  return QXM.map(m=>{
+    const v=qs[m.k]||0,pct=Math.round(v/m.w*100);
+    const isDominant=m.k==='mom';
+    return `<div class="qxrow ${isDominant?'qxrow-dom':''}">
+      <div class="qxrl ${isDominant?'qxrl-dom':''}">${isDominant?'⚡ ':''}${m.l}</div>
+      <div class="qxrb ${isDominant?'qxrb-dom':''}"><div class="qxrf" style="width:${pct}%;background:${pct>=80?'var(--G)':pct>=60?'var(--B)':'var(--A)'}"></div></div>
+      <div class="qxrv">${v}/${m.w}</div>
+    </div>`;
+  }).join('');
+}
+
+function allocHTML(p,totEq,targets){
+  const curPct=(p.qty*p.ltp/totEq*100);
+  const clusterVal=PF.filter(x=>x.cluster===p.cluster).reduce((a,x)=>a+x.qty*x.ltp,0);
+  const clusterPct=(clusterVal/totEq*100).toFixed(1);
+  const posOver=curPct>15, secOver=clusterPct>25;
+  const targetPct=p.target_weight || targets[p.sym] || 0;
+  const gap=curPct-targetPct;
+  const gapAbs=Math.abs(gap).toFixed(1);
+  let gapVerdict, gapColor;
+  if(gapAbs<1.5){gapVerdict='At target';gapColor='var(--t2)';}
+  else if(gap>0){gapVerdict=`${gapAbs}pp OVERWEIGHT`;gapColor='var(--A)';}
+  else{gapVerdict=`${gapAbs}pp UNDERWEIGHT`;gapColor='var(--G)';}
+  return `<div class="alloc-box">
+    <div class="alloc-row"><span class="alloc-k">Position Weight</span><span class="alloc-v" style="color:${posOver?'var(--R)':'var(--G)'}">${curPct.toFixed(1)}% ${posOver?'⚠️ OVER 15%':''}</span></div>
+    <div class="alloc-bar"><div class="alloc-fill" style="width:${Math.min(100,curPct*4)}%;background:${posOver?'var(--R)':'var(--G)'}"></div><div class="alloc-cap" style="left:60%"></div></div>
+    <div class="alloc-row" style="margin-top:6px"><span class="alloc-k">${p.cluster} Cluster</span><span class="alloc-v" style="color:${secOver?'var(--R)':'var(--B)'}">${clusterPct}% ${secOver?'⚠️ OVER 25%':''}</span></div>
+    <div class="alloc-bar"><div class="alloc-fill" style="width:${Math.min(100,clusterPct*2.4)}%;background:${secOver?'var(--R)':'var(--B)'}"></div><div class="alloc-cap" style="left:60%"></div></div>
+    <div class="alloc-row" style="margin-top:6px"><span class="alloc-k">Quant Target Weight</span><span class="alloc-v" style="color:var(--U)">${targetPct.toFixed(1)}%</span></div>
+    <div class="alloc-bar"><div class="alloc-fill" style="width:${Math.min(100,targetPct*4)}%;background:var(--U)"></div><div class="alloc-cap" style="left:60%"></div></div>
+    <div class="alloc-row" style="margin-top:4px"><span class="alloc-k" style="font-size:10px">vs Current</span><span class="alloc-v" style="color:${gapColor};font-size:10px">${gapVerdict}</span></div>
+  </div>`;
+}
+
+function pfDetail(p,totEq,targets){
+  const qt=qxT(p.qs),qc=qxC(qt),grade=getGrade(qt),gm=getGM(grade);
+  const ml=momLabel(p.mom.stage);
+  return `<div class="mom-block">
+    <div class="mom-head"><div><div class="mom-big" style="color:${momC(p.mom.score)}">${p.mom.score}</div><div class="mom-lbl">Momentum /100</div></div>
+      <div class="mom-stage ${ml.cls}">${ml.txt}</div></div>
+    <div class="mom-note">${p.mom.stageNote || 'Automated Quant Signal'}</div>
+    <div class="mom-sub"><span>RS ${p.mom.rs}</span><span>Vol Score ${p.mom.vol}</span><span>LTP ₹${p.ltp.toFixed(2)}</span></div>
+  </div>
+  <div class="qxbd"><div class="qxbd-t"><span>QX-200 Quant Score</span><span style="color:${qc}">${qt}/100 · ${grade}</span></div>${qxBarHTML(p.qs)}</div>
+  ${allocHTML(p,totEq,targets)}
+  <div class="dgrid">
+    <div class="dkv"><div class="dk">Signal</div><div class="dv"><span class="bx ${SIG_META[p.sig]?.cls||'xB'}">${p.sig}</span></div></div>
+    <div class="dkv"><div class="dk">Action</div><div class="dv cA">${p.act}</div></div>
+    <div class="dkv"><div class="dk">Stop Loss</div><div class="dv cR">${p.sl}</div></div>
+    <div class="dkv"><div class="dk">Volatility</div><div class="dv">${(p.volatility*100).toFixed(2)}%</div></div>
+  </div>
+  <div class="dnote">${p.note}</div>
+  <div class="frow"><span class="ft fb">👤 ${p.insider}</span><span class="ft fb">🏦 ${p.dii}</span></div>`;
+}
+
+function renderHero(){
+  const totInv=PF.reduce((a,p)=>a+p.inv,0), totPl=PF.reduce((a,p)=>a+p.pl,0);
+  const totCur=PF.reduce((a,p)=>a+p.qty*p.ltp,0);
+  const cash=CASH;
+  const grandTotal=totCur+cash;
+  const avgMom=(PF.reduce((a,p)=>a+p.mom.score,0)/PF.length).toFixed(0);
+  const retPct=(totPl/totInv*100).toFixed(1);
+  const retColor=retPct>=0?'cG':'cR';
+  const capTarget=CAPITAL_TARGET;
+  const capGap=capTarget-grandTotal;
+  document.getElementById('heroBox').innerHTML=`
+    <div class="hc"><div class="hl">Invested</div><div class="hv cB">₹${(totInv/100000).toFixed(2)}L</div><div class="hs">${PF.length} positions</div></div>
+    <div class="hc"><div class="hl">Current + Cash</div><div class="hv ${retColor}">₹${(grandTotal/100000).toFixed(2)}L</div><div class="hs">${retPct>=0?'+':''}${retPct}% · Cash ₹${(cash/1000).toFixed(0)}K</div></div>
+    <div class="hc"><div class="hl">Avg Momentum</div><div class="hv" style="color:${momC(avgMom)}">${avgMom}<span style="font-size:11px;color:var(--t3)">/100</span></div><div class="hs">Dynamic Quant Factor</div></div>
+    <div class="hc"><div class="hl">Capital Target</div><div class="hv cU">₹${(capTarget/100000).toFixed(1)}L</div><div class="hs">₹${(capGap/1000).toFixed(0)}K to fund</div></div>`;
+  renderSectorAlert();
+  renderGainButtons();
+}
+function renderSectorAlert(){
+  const totCur=PF.reduce((a,p)=>a+p.qty*p.ltp,0);
+  const clusterMap={};
+  PF.forEach(p=>{const v=p.qty*p.ltp;clusterMap[p.cluster]=(clusterMap[p.cluster]||0)+v;});
+  const topCluster=Object.entries(clusterMap).sort((a,b)=>b[1]-a[1])[0];
+  const topClusterPct=(topCluster[1]/totCur*100).toFixed(1);
+  const clusterBreach=topClusterPct>25;
+  const el=document.getElementById('sectorAlert');
+  if(!el)return;
+  if(clusterBreach){
+    el.innerHTML=`<div class="al alR"><div class="ai">⚠️</div><div><div class="at">${topCluster[0]} at ${topClusterPct}% — over 25% sector cap</div><div class="ax">Largest single-sector concentration. Trim suggested.</div></div></div>`;
+  } else {
+    el.innerHTML='';
+  }
+}
+let gainMode='abs';
+function renderGainButtons(){
+  const totInv=PF.reduce((a,p)=>a+p.inv,0), totPl=PF.reduce((a,p)=>a+p.pl,0);
+  const retPct=(totPl/totInv*100);
+  const el=document.getElementById('gainButtons');
+  if(!el)return;
+  el.innerHTML=`
+    <div class="gain-btn ${gainMode==='abs'?'on':''}" onclick="setGainMode('abs')">
+      <div class="gain-btn-l">Since Purchase — ₹</div>
+      <div class="gain-btn-v ${totPl>=0?'cG':'cR'}">${totPl>=0?'+':''}₹${Math.abs(totPl).toLocaleString('en-IN',{maximumFractionDigits:0})}</div>
+    </div>
+    <div class="gain-btn ${gainMode==='pct'?'on':''}" onclick="setGainMode('pct')">
+      <div class="gain-btn-l">Since Purchase — %</div>
+      <div class="gain-btn-v ${retPct>=0?'cG':'cR'}">${retPct>=0?'+':''}${retPct.toFixed(2)}%</div>
+    </div>`;
+  renderGainPanel();
+}
+function setGainMode(m){gainMode=m;renderGainButtons();}
+function renderGainPanel(){
+  const el=document.getElementById('gainPanel');
+  if(!el)return;
+  const totInv=PF.reduce((a,p)=>a+p.inv,0), totPl=PF.reduce((a,p)=>a+p.pl,0);
+  const sorted=[...PF].sort((a,b)=>gainMode==='abs'?b.pl-a.pl:b.ret-a.ret);
+  el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+      <span style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Per-Stock Gains Since Purchase</span>
+      <span class="gain-tot ${totPl>=0?'cG':'cR'}">${totPl>=0?'+':''}₹${(totPl/1000).toFixed(1)}K</span>
+    </div>
+    ${sorted.map(p=>{
+      const v = gainMode==='abs' ? `${p.pl>=0?'+':''}₹${Math.abs(p.pl).toLocaleString('en-IN',{maximumFractionDigits:0})}` : `${p.ret>=0?'+':''}${p.ret.toFixed(2)}%`;
+      return `<div class="gain-row"><span>${p.sym}</span><span class="${p.pl>=0?'cG':'cR'}" style="font-family:'JetBrains Mono',monospace;font-weight:700">${v}</span></div>`;
+    }).join('')}
+  `;
+}
+
+function renderPF(){
+  const totEq=PF.reduce((a,p)=>a+p.qty*p.ltp,0);
+  const targets=computeTargetWeights();
+  document.getElementById('ovList').innerHTML=PF.map(p=>{
+    const ml=momLabel(p.mom.stage);
+    const plCls=p.pl>=0?'cG':'cR';
+    const plSign=p.pl>=0?'+':'';
+    return `<div class="xrow b${p.mom.score>=70?'G':p.mom.score>=50?'B':p.mom.score>=40?'A':'R'}" id="r-${p.sym}" onclick="toggle('r-${p.sym}')">
+      <div class="xhead2">
+        ${stockLogo(p.sym)}
+        <div class="xmain">
+          <div class="xtop"><span class="xsym2">${p.sym}</span><span class="bx ${SIG_META[p.sig]?.cls||'xB'}">${p.sig}</span></div>
+          <div class="xmeta">${p.qty} sh · ₹${p.ltp.toLocaleString('en-IN',{maximumFractionDigits:2})} · ${(p.qty*p.ltp/totEq*100).toFixed(1)}% wt</div>
+        </div>
+        <div class="xnums">
+          <div class="xpl ${plCls}">${plSign}₹${Math.abs(p.pl).toLocaleString('en-IN',{maximumFractionDigits:0})}</div>
+          <div class="xplabs ${plCls}">${plSign}${p.ret.toFixed(2)}%</div>
+          <div class="xmom"><span style="color:${momC(p.mom.score)}">M${p.mom.score}</span><span class="${ml.cls}">${ml.txt}</span></div>
+        </div>
+        <div class="xchev2">▶</div>
+      </div>
+      <div class="xbody"><div class="xbody-in">${pfDetail(p,totEq,targets)}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderAction(){
+  const ex=PF.filter(p=>p.sig==='TRIM'||p.sig==='REDUCE');
+  const add=PF.filter(p=>p.sig==='ACCUM'||p.sig==='ADD-T');
+  const hld=PF.filter(p=>p.sig==='HOLD'||p.sig==='LATENT');
+  const totEq=PF.reduce((a,p)=>a+p.qty*p.ltp,0);
+  const targets=computeTargetWeights();
+  const mkSub=(icon,label,color,arr)=>{
+    if(!arr.length)return'';
+    return `<div class="asub-hdr" style="color:${color}">${icon} ${label} (${arr.length})</div>
+      ${arr.map(p=>{const ml=momLabel(p.mom.stage);return`<div class="xrow b${p.mom.score>=70?'G':p.mom.score>=50?'B':p.mom.score>=40?'A':'R'}" id="ra-${p.sym}" onclick="toggle('ra-${p.sym}')">
+        <div class="xhead"><div class="xleft"><div class="xsym">${p.sym}<span class="bx ${SIG_META[p.sig]?.cls||'xB'}">${p.sig}</span></div><div class="xsub">${p.evt}</div></div>
+        <div class="xright"><div style="text-align:right"><div class="mom-mini" style="color:${momC(p.mom.score)}">${p.mom.score}</div><div class="mom-mini-stage ${ml.cls}">${ml.txt}</div></div><div class="xchev">▶</div></div></div>
+        <div class="xbody"><div class="xbody-in">${pfDetail(p,totEq,targets)}</div></div></div>`;}).join('')}`;
+  };
+  document.getElementById('acList').innerHTML=
+    `<div class="card"><div class="ch"><div class="dot dB"></div><div class="ct" style="color:var(--B)">📋 Portfolio Actions</div></div>
+    <div style="padding:10px">
+      ${mkSub('🔴','Trim / Reduce','var(--R)',ex)}
+      ${mkSub('✅','Add / Accumulate','var(--G)',add)}
+      ${mkSub('🟡','Hold & Monitor','var(--A)',hld)}
+    </div></div>`;
+}
+
+function renderWL(){
+  document.getElementById('wlList').innerHTML=`<div class="card" style="padding:15px;color:var(--t2);text-align:center">Watchlist now synchronizes with live Quant-scored Portfolio data.</div>`;
+}
+
+function renderWflow(){document.getElementById('wflow').innerHTML=WFLOW.map(w=>`<div class="wfstep"><div class="wfnum">${w.n}</div><div class="wfcontent"><div class="wftitle">${w.title}</div><div class="wftext">${w.text}</div></div></div>`).join('')}
+function renderRules(){document.getElementById('rules').innerHTML=RULES.map((r,i)=>`<div class="rule"><div class="rn">#${i+1}</div><div class="rt">${r}</div></div>`).join('')}
+function renderMistakeLog(){
+  const el=document.getElementById('mistakes');
+  if(!el)return;
+  el.innerHTML=MISTAKES.map(m=>`<div class="rule"><div class="rn">${m.type||'—'}</div><div class="rt"><b>${m.stock||''}</b> ${m.lesson||m}</div></div>`).join('');
+}
+
+function momScoreColor(s){return s>=61?'var(--G)':s<=40?'var(--R)':'var(--A)'}
+function momScoreLabel(s){return s>=61?'BULLISH':s<=40?'BEARISH':'NEUTRAL'}
+function stockLogo(sym){
+  const colors=['#00d4a0','##4d9fff','#ffc857','#ff6b9d','#a78bfa','#ff8c42','#34d1c4'];
+  let hash=0; for(let i=0;i<sym.length;i++) hash=sym.charCodeAt(i)+((hash<<5)-hash);
+  const c=colors[Math.abs(hash)%colors.length];
+  const letter=sym.charAt(0);
+  return `<div class="slogo" style="background:${c}22;border:1px solid ${c}55;color:${c}">${letter}</div>`;
+}
+
+const SECTOR_ROTATION=[
+ {name:'Logistics',mcap:'7,29,938',stocks:128,m1:77,m3:68,m6:79},
+ {name:'Paper',mcap:'29,643',stocks:55,m1:72,m3:74,m6:69},
+ {name:'Miscellaneous',mcap:'52,743',stocks:25,m1:72,m3:65,m6:81},
+ {name:'Healthcare',mcap:'38,10,903',stocks:314,m1:69,m3:65,m6:68},
+ {name:'Photographic Product',mcap:'854',stocks:3,m1:68,m3:76,m6:76},
+ {name:'Abrasives',mcap:'46,332',stocks:3,m1:68,m3:73,m6:80},
+ {name:'Trading',mcap:'7,66,109',stocks:497,m1:66,m3:56,m6:71},
+];
+
+const INDUSTRY_ROTATION=[
+ {name:'Port',mcap:'5,06,574',stocks:4,m1:87,m3:73,m6:90},
+ {name:'Construction Vehicles',mcap:'34,397',stocks:5,m1:83,m3:88,m6:87},
+ {name:'Petrochemicals',mcap:'26,959',stocks:11,m1:80,m3:75,m6:82},
+ {name:'Watches & Accessories',mcap:'12,894',stocks:4,m1:78,m3:87,m6:33},
+ {name:'Educational Institutions',mcap:'52,162',stocks:28,m1:78,m3:70,m6:75},
+ {name:'Professional Services',mcap:'50,642',stocks:54,m1:77,m3:80,m6:69},
+ {name:'Dyes & Pigments',mcap:'26,090',stocks:29,m1:76,m3:82,m6:76},
+];
+
+function renderLMap(){
+  const mkRow=(items)=>items.map(s=>{
+    const c1=momScoreColor(s.m1),c3=momScoreColor(s.m3),c6=momScoreColor(s.m6);
+    return `<div class="lsec2">
+      <div class="lsec2-top">
+        <div class="lsec2-nm">${s.name}</div>
+        <div class="lsec2-meta">MCap: ₹${s.mcap} Cr · ${s.stocks} stocks</div>
+      </div>
+      <div class="lsec2-scores">
+        <div class="lscore" style="background:${c1}"><div class="lscore-lbl">1M</div><div class="lscore-val">${s.m1}</div></div>
+        <div class="lscore" style="background:${c3}"><div class="lscore-lbl">3M</div><div class="lscore-val">${s.m3}</div></div>
+        <div class="lscore" style="background:${c6}"><div class="lscore-lbl">6M</div><div class="lscore-val">${s.m6}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('lmap').innerHTML=`
+    <div class="lmap-legend">
+      <span class="lleg"><span class="ldot" style="background:var(--R)"></span>Bearish 0-40</span>
+      <span class="lleg"><span class="ldot" style="background:var(--A)"></span>Neutral 41-60</span>
+      <span class="lleg"><span class="ldot" style="background:var(--G)"></span>Bullish 61-100</span>
+      <span class="lleg-date">22 Sep 2026</span>
+    </div>
+    <div class="lmap-sub">▸ Sectors — Momentum Scores</div>
+    ${mkRow(SECTOR_ROTATION)}
+    <div class="lmap-sub" style="margin-top:14px">▸ Industries — Momentum Scores</div>
+    ${mkRow(INDUSTRY_ROTATION)}
+    <div class="lmap-note">⚠️ Watches & Accessories: 1M/3M bullish (78/87) but 6M BEARISH (33).</div>
+  `;
+}
+
+const WFLOW=[
+  {n:1,title:'Market Regime',text:'Quant-driven regime detection using 200DMA.'},
+  {n:2,title:'Sector Leadership Map',text:'Dynamic cluster breadth calculation.'},
+  {n:3,title:'Top-Gainer Discovery',text:'Automated RS-ranking engine.'},
+  {n:4,title:'Reverse-Engineer WHY',text:'Cross-referencing PAT growth with price action.'},
+  {n:5,title:'Catalyst Verification',text:'Persistence checks via 90-day window.'},
+  {n:6,title:'Earnings Persistence',text:'Sequential acceleration check.'},
+  {n:7,title:'Relative Strength',text:'Automatic outperform vs Nifty 50.'},
+  {n:8,title:'Institutional Confirmation',text:'Delivery and Block deal tracking.'},
+  {n:9,title:'Valuation',text:'PEG and EV/EBITDA relative to peer group.'},
+  {n:10,title:'Entry, Risk & GTT',text:'Vol-adjusted position sizing.'},
+];
+
+const RULES=[
+  'Good company ≠ good 3-month investment.',
+  'Earnings acceleration must be distinguished from one-off PAT growth.',
+  'Every major price move must have an identifiable, verifiable reason.',
+  'Catalyst must have 90-day persistence.',
+  'Relative strength is mandatory for a momentum BUY.',
+  'Sector breadth (3+/5+/8+) materially increases conviction.',
+  'Quiet accumulation beats chasing extended breakouts.',
+  'Valuation determines remaining upside.',
+  'Portfolio opportunity cost: replace persistent laggards.',
+  'Every data point verified from ≥2 independent sources.',
+];
+
+const MISTAKES=[
+  {type:'Momentum Trap',stock:'KPRMILL',date:'v6',lesson:'Strong fundamentals + export sector weakness = held too long.'},
+  {type:'Concentration Breach',stock:'CRAFTSMAN',date:'v7',lesson:'Position grew to 17.1% without alert.'},
+  {type:'Signal Ambiguity',stock:'SRF',date:'v6-v7',lesson:'HOLD vs LATENT are distinct signals.'},
+  {type:'False ADD Signal',stock:'CANFINHOME',date:'v6',lesson:'RS mandatory for momentum BUY.'},
+];
+
+renderWflow();renderRules();renderMistakeLog();
+</script>
+</body>
+</html>
